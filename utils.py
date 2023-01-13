@@ -1,5 +1,11 @@
 from datetime import datetime
 import os
+from pathlib import Path
+
+
+def file_exists(file_name):
+    target_file = Path(file_name)
+    return target_file.is_file()
 
 
 def check_os_access(file_name, right=os.W_OK, to_abort=True):

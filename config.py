@@ -1,11 +1,11 @@
 import configparser
-from argparse import ArgumentParser
+import argparse
 import utils
 
 cfg = configparser.ConfigParser()
 cfg.optionxform = str
 
-cfg.read('config.ini')
+cfg.read('config.ini', encoding='utf-8')
 
 enable_logging = cfg['Params'].getboolean('enable_logging')
 log_files = cfg['Logs'].get('log_files')
@@ -18,12 +18,46 @@ if enable_logging:
     utils.check_if_dir_exists(log_error)
 
 production = cfg['Params'].getboolean('production')
-description = cfg['Params'].getboolean('description')
+description = cfg['Params'].get('description')
 
+input_file = cfg['App'].get('input_file')
+out_file = cfg['App'].get('out_file')
+
+default_cat = cfg['App'].get('default_cat')
+
+lookup_ziro = cfg['App'].get('lookup_ziro')
+lookup_ime = cfg['App'].get('lookup_ime')
+
+excel_columns = cfg['App'].get('excel_columns')
+if excel_columns:
+    excel_columns = excel_columns.split(",")
+else:
+    excel_columns = None
+
+excel_bom = cfg['App'].getboolean('excel_bom')
 
 def read_cmd_parameters():
     # Parsing command line
-    global description
-    parser = ArgumentParser(description=description)
+    global description, input_file, out_file, default_cat
+    parser = argparse.ArgumentParser(description=description)
+
+    parser.add_argument('-i', '--input_file', default=input_file,
+                        help=f'Ime ulaznog CSV fajla (eksport sa banke), default je "{input_file}"',
+                        required=False)
+
+    parser.add_argument('-o', '--out_file', default=out_file,
+                        help=f'Ime rezultujućeg CSV fajla, default je "{out_file}"',
+                        required=False)
+
+    parser.add_argument('-c', '--default_cat', default=default_cat,
+                        help=f'Naziv podrazumevane kategorije, ako se ne nađe; default je "{default_cat}"',
+                        required=False)
 
     args = parser.parse_args()
+
+    if args.input_file:
+        input_file = args.input_file
+    if args.out_file:
+        out_file = args.out_file
+    if args.default_cat:
+        default_cat = args.default_cat

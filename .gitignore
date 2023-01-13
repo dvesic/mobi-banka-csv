@@ -130,3 +130,8 @@ dmypy.json
 
 # PyCharm
 .idea/
+
+# Project files
+log/
+PrintList.csv
+Troskovi.csv

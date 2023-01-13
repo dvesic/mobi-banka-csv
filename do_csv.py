@@ -1,0 +1,132 @@
+import csv
+import config
+import utils
+
+
+headers = ['StartsWith', 'TranslateTo', 'Category']
+lookup_names = []
+lookup_names_dirty = False
+
+lookup_ziro = []
+lookup_ziro_dirty = False
+
+# Important fields from transaction file:
+name_field = 'CreditorName'
+name_field_alt = 'PurposeDescription'
+acc_num_field = 'CreditorAccountNumber'
+
+
+def process_transaction_file():
+    transactions = []
+    transactions_dirty = False
+
+    # Mobi banka export file is UTF-8 with BOM signature
+    with open(config.input_file, 'r', encoding='utf-8-sig') as theFile:
+        reader = csv.DictReader(theFile)
+        fields = reader.fieldnames
+        for line in reader:
+            line['Category'] = config.default_cat
+            matched, replace_with, new_category = check_names(line, config.default_cat)
+            if matched:
+                line[name_field] = replace_with
+                line['Category'] = new_category
+                transactions_dirty = True
+
+            transactions.append(line)
+
+    if transactions_dirty:
+        write_transactions(transactions, fields)
+
+    return transactions
+
+
+def write_transactions(transactions, fields):
+    fields = list(fields)
+    fields.append('Category')
+
+    # Excel hack
+    text_encoding = "utf-8"
+    if config.excel_bom:
+        text_encoding = "utf-8-sig"
+
+    with open(config.out_file, 'w', newline='', encoding=text_encoding) as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fields, quoting=csv.QUOTE_NONNUMERIC)
+        writer.writeheader()
+        for item in transactions:
+
+            # Another Excel hack, to prevent text data treated as numbers
+            if config.excel_columns:
+                for column in config.excel_columns:
+                    if item[column]:
+                        item[column] = '="' + item[column] + '"'
+            writer.writerow(item)
+
+
+def check_names(curr_line, default_category):
+    global lookup_names, lookup_names_dirty
+
+    search_key = curr_line[name_field]
+    if not search_key:
+        search_key = curr_line[name_field_alt]
+
+    search_key_clean = search_key.lower().strip()
+    found = False
+    translate_to = None
+    category = None
+
+    for item in lookup_names:
+        item_clean = item[headers[0]].lower().strip()
+        if search_key_clean.startswith(item_clean):
+            found = True
+            translate_to = item[headers[1]]
+            category = item[headers[2]]
+
+    if not found:
+        lookup_names.append({headers[0]: search_key, headers[1]: search_key, headers[2]: default_category})
+        lookup_names_dirty = True
+
+    return found, translate_to, category
+
+
+def read_names():
+    global lookup_names
+
+    if not utils.file_exists(config.lookup_ime):
+        return
+
+    with open(config.lookup_ime, 'r', encoding='utf-8') as theFile:
+        reader = csv.DictReader(theFile)
+        for line in reader:
+            lookup_names.append(line)
+
+
+def write_names():
+    global lookup_names, headers
+
+    with open(config.lookup_ime, 'w', newline='', encoding='utf-8') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=headers, quoting=csv.QUOTE_NONNUMERIC)
+        writer.writeheader()
+        for item in lookup_names:
+            writer.writerow(item)
+
+
+def read_accounts():
+    global lookup_ziro
+
+    if not utils.file_exists(config.lookup_ziro):
+        return
+
+    with open(config.lookup_ziro, 'r') as theFile:
+        reader = csv.DictReader(theFile)
+        for line in reader:
+            lookup_ziro.append(line)
+
+
+def write_accounts():
+    global lookup_ziro, headers
+
+    with open(config.lookup_ziro, 'w', newline='', encoding='utf-8') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=headers, quoting=csv.QUOTE_NONNUMERIC)
+        writer.writeheader()
+        for item in lookup_names:
+            writer.writerow(item)
