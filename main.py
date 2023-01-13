@@ -9,9 +9,6 @@ if __name__ == "__main__":
     if not config.production:
         file_logging.log_info("APP Started")
 
-    # Read accounts
-    do_csv.read_accounts()
-
     # Read names
     do_csv.read_names()
 
@@ -20,9 +17,6 @@ if __name__ == "__main__":
 
     if do_csv.lookup_names_dirty:
         do_csv.write_names()
-
-    if do_csv.lookup_ziro_dirty:
-        do_csv.write_accounts()
 
     for line in transactions:
         print(line)

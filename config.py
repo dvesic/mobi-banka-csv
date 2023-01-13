@@ -7,26 +7,30 @@ cfg.optionxform = str
 
 cfg.read('config.ini', encoding='utf-8')
 
-enable_logging = cfg['Params'].getboolean('enable_logging')
-log_files = cfg['Logs'].get('log_files')
+# Logging section
+
+enable_logging = cfg['Logs'].getboolean('enable_logging')
+
 log_info = cfg['Logs'].get('info', '$date$-progress.txt').replace('$date$', utils.get_date_as_string())
 log_error = cfg['Logs'].get('error', '$date$-error_file.txt').replace('$date$', utils.get_date_as_string())
 
 if enable_logging:
-    utils.check_if_dir_exists(log_files)
     utils.check_if_dir_exists(log_info)
     utils.check_if_dir_exists(log_error)
 
+# Params section
+
 production = cfg['Params'].getboolean('production')
 description = cfg['Params'].get('description')
+
+# App specific section
 
 input_file = cfg['App'].get('input_file')
 out_file = cfg['App'].get('out_file')
 
 default_cat = cfg['App'].get('default_cat')
 
-lookup_ziro = cfg['App'].get('lookup_ziro')
-lookup_ime = cfg['App'].get('lookup_ime')
+lookup_names = cfg['App'].get('lookup_names')
 
 excel_columns = cfg['App'].get('excel_columns')
 if excel_columns:
@@ -35,6 +39,7 @@ else:
     excel_columns = None
 
 excel_bom = cfg['App'].getboolean('excel_bom')
+
 
 def read_cmd_parameters():
     # Parsing command line

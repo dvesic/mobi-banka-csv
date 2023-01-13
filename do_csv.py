@@ -2,13 +2,9 @@ import csv
 import config
 import utils
 
-
-headers = ['StartsWith', 'TranslateTo', 'Category']
+headers = ['StartsWith', 'TranslateTo', 'Category', 'Remove']
 lookup_names = []
 lookup_names_dirty = False
-
-lookup_ziro = []
-lookup_ziro_dirty = False
 
 # Important fields from transaction file:
 name_field = 'CreditorName'
@@ -26,13 +22,13 @@ def process_transaction_file():
         fields = reader.fieldnames
         for line in reader:
             line['Category'] = config.default_cat
-            matched, replace_with, new_category = check_names(line, config.default_cat)
+            matched, replace_with, new_category, remove = check_names(line, config.default_cat)
             if matched:
                 line[name_field] = replace_with
                 line['Category'] = new_category
                 transactions_dirty = True
-
-            transactions.append(line)
+            if not remove:
+                transactions.append(line)
 
     if transactions_dirty:
         write_transactions(transactions, fields)
@@ -73,6 +69,7 @@ def check_names(curr_line, default_category):
     found = False
     translate_to = None
     category = None
+    remove = False
 
     for item in lookup_names:
         item_clean = item[headers[0]].lower().strip()
@@ -80,21 +77,23 @@ def check_names(curr_line, default_category):
             found = True
             translate_to = item[headers[1]]
             category = item[headers[2]]
+            remove = (item[headers[3]] == 'TRUE')
 
     if not found:
-        lookup_names.append({headers[0]: search_key, headers[1]: search_key, headers[2]: default_category})
+        lookup_names.append({headers[0]: search_key, headers[1]: search_key, headers[2]: default_category,
+                             headers[3]: 'FALSE'})
         lookup_names_dirty = True
 
-    return found, translate_to, category
+    return found, translate_to, category, remove
 
 
 def read_names():
     global lookup_names
 
-    if not utils.file_exists(config.lookup_ime):
+    if not utils.file_exists(config.lookup_names):
         return
 
-    with open(config.lookup_ime, 'r', encoding='utf-8') as theFile:
+    with open(config.lookup_names, 'r', encoding='utf-8') as theFile:
         reader = csv.DictReader(theFile)
         for line in reader:
             lookup_names.append(line)
@@ -103,29 +102,7 @@ def read_names():
 def write_names():
     global lookup_names, headers
 
-    with open(config.lookup_ime, 'w', newline='', encoding='utf-8') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=headers, quoting=csv.QUOTE_NONNUMERIC)
-        writer.writeheader()
-        for item in lookup_names:
-            writer.writerow(item)
-
-
-def read_accounts():
-    global lookup_ziro
-
-    if not utils.file_exists(config.lookup_ziro):
-        return
-
-    with open(config.lookup_ziro, 'r') as theFile:
-        reader = csv.DictReader(theFile)
-        for line in reader:
-            lookup_ziro.append(line)
-
-
-def write_accounts():
-    global lookup_ziro, headers
-
-    with open(config.lookup_ziro, 'w', newline='', encoding='utf-8') as csvfile:
+    with open(config.lookup_names, 'w', newline='', encoding='utf-8') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=headers, quoting=csv.QUOTE_NONNUMERIC)
         writer.writeheader()
         for item in lookup_names:
