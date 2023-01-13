@@ -92,7 +92,7 @@ def read_names():
     if not utils.file_exists(config.lookup_names):
         return
 
-    with open(config.lookup_names, 'r', encoding='utf-8') as theFile:
+    with open(config.lookup_names, 'r', encoding='utf-8-sig') as theFile:
         reader = csv.DictReader(theFile)
         for line in reader:
             lookup_names.append(line)
