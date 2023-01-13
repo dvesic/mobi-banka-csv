@@ -16,13 +16,13 @@ def process_transaction_file():
     transactions = []
     transactions_dirty = False
 
-    # Mobi banka export file is UTF-8 with BOM signature
+    # Mobi CSV export file is UTF-8 with BOM signature
     with open(config.input_file, 'r', encoding='utf-8-sig') as theFile:
         reader = csv.DictReader(theFile)
-        fields = reader.fieldnames
+        fields = list(reader.fieldnames)    # converting sequence to list
         for line in reader:
             line['Category'] = config.default_cat
-            matched, replace_with, new_category, remove = check_names(line, config.default_cat)
+            matched, replace_with, new_category, remove = check_names(line)
             if matched:
                 line[name_field] = replace_with
                 line['Category'] = new_category
@@ -37,7 +37,7 @@ def process_transaction_file():
 
 
 def write_transactions(transactions, fields):
-    fields = list(fields)
+    # Adding newly created field
     fields.append('Category')
 
     # Excel hack
@@ -49,7 +49,6 @@ def write_transactions(transactions, fields):
         writer = csv.DictWriter(csvfile, fieldnames=fields, quoting=csv.QUOTE_NONNUMERIC)
         writer.writeheader()
         for item in transactions:
-
             # Another Excel hack, to prevent text data treated as numbers
             if config.excel_columns:
                 for column in config.excel_columns:
@@ -58,7 +57,7 @@ def write_transactions(transactions, fields):
             writer.writerow(item)
 
 
-def check_names(curr_line, default_category):
+def check_names(curr_line):
     global lookup_names, lookup_names_dirty
 
     search_key = curr_line[name_field]
@@ -77,10 +76,10 @@ def check_names(curr_line, default_category):
             found = True
             translate_to = item[headers[1]]
             category = item[headers[2]]
-            remove = (item[headers[3]] == 'TRUE')
+            remove = (item[headers[3]].upper() == 'TRUE')
 
     if not found:
-        lookup_names.append({headers[0]: search_key, headers[1]: search_key, headers[2]: default_category,
+        lookup_names.append({headers[0]: search_key, headers[1]: search_key, headers[2]: config.default_cat,
                              headers[3]: 'FALSE'})
         lookup_names_dirty = True
 
