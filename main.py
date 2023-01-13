@@ -1,3 +1,12 @@
+"""
+Set of routines for processing CSV export of transactions from https://online.mobibanka.rs
+
+Details are in README.md, in Serbian, given target audience.
+"""
+
+__version__ = '0.25'
+__author__ = 'Dejan Vesić, Dejan@Vesic.Org'
+
 import config
 import file_logging
 import do_csv
@@ -18,5 +27,6 @@ if __name__ == "__main__":
     if do_csv.lookup_names_dirty:
         do_csv.write_names()
 
-    for line in transactions:
-        print(line)
+    if not config.production:
+        for line in transactions:
+            print(line)
