@@ -28,7 +28,7 @@ pip install -r requirements.txt
 ```
 
 To bi bilo to što se tiče instalacije :-) (mada, i bez ovog koraka će raditi - program isključivo koristi samo 
-standardne biblioteke koje dolaze uz python
+standardne biblioteke koje dolaze uz python)
 
 ## Eksport podataka
 
