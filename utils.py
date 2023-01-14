@@ -1,6 +1,6 @@
 from datetime import datetime
 import os
-from pathlib import Path
+from pathlib import Path, PurePath
 
 
 def file_exists(file_name):
@@ -38,6 +38,11 @@ def check_if_dir_exists(path_or_file, to_abort=True):
             quit(1023)
 
     return result
+
+
+def path_leaf(path):
+    pure_path = PurePath(path)
+    return str(pure_path.parent), pure_path.name
 
 
 def get_date_as_string(date_arg=None, fmt='%Y%m%d'):

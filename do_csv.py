@@ -9,7 +9,16 @@ lookup_names_dirty = False
 # Important fields from transaction file:
 name_field = 'CreditorName'
 name_field_alt = 'PurposeDescription'
-acc_num_field = 'CreditorAccountNumber'
+amount_field = 'CurrencyAmount'
+
+
+def return_write_encoding():
+
+    # Excel opens CSV files with BOM signature as UTF-8
+    text_encoding = "utf-8"
+    if config.excel_bom:
+        text_encoding = "utf-8-sig"
+    return text_encoding
 
 
 def process_transaction_file():
@@ -20,6 +29,9 @@ def process_transaction_file():
     with open(config.input_file, 'r', encoding='utf-8-sig') as theFile:
         reader = csv.DictReader(theFile)
         fields = list(reader.fieldnames)    # converting sequence to list
+        # Adding newly created field
+        fields.append('Category')
+
         for line in reader:
             line['Category'] = config.default_cat
             matched, replace_with, new_category, remove = check_names(line)
@@ -31,19 +43,42 @@ def process_transaction_file():
                 transactions.append(line)
 
     if transactions_dirty:
+        write_category_sums(transactions)
         write_transactions(transactions, fields)
 
     return transactions
 
 
-def write_transactions(transactions, fields):
-    # Adding newly created field
-    fields.append('Category')
+def write_category_sums(transactions):
+    global amount_field
+    sums = {}
+    total_amount = 0
 
-    # Excel hack
-    text_encoding = "utf-8"
-    if config.excel_bom:
-        text_encoding = "utf-8-sig"
+    for item in transactions:
+        amount = float(item[amount_field])
+        total_amount += amount
+        if item['Category'] in sums:
+            sums[item['Category']] += amount
+        else:
+            sums[item['Category']] = amount
+
+    sorted_sums = dict(sorted(sums.items(), key=lambda x: x[1], reverse=True))
+
+    rows = []
+    for key, value in sorted_sums.items():
+        rows.append({'Category': key, 'Amount': value, 'Percentage': value / total_amount * 100})
+
+    text_encoding = return_write_encoding()
+
+    with open(config.out_file_sum, 'w', newline='', encoding=text_encoding) as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=['Category','Amount','Percentage'], quoting=csv.QUOTE_NONNUMERIC)
+        writer.writeheader()
+        for item in rows:
+            writer.writerow(item)
+
+def write_transactions(transactions, fields):
+
+    text_encoding = return_write_encoding()
 
     with open(config.out_file, 'w', newline='', encoding=text_encoding) as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fields, quoting=csv.QUOTE_NONNUMERIC)
@@ -101,7 +136,8 @@ def read_names():
 def write_names():
     global lookup_names, headers
 
-    with open(config.lookup_names, 'w', newline='', encoding='utf-8') as csvfile:
+    text_encoding = return_write_encoding()
+    with open(config.lookup_names, 'w', newline='', encoding=text_encoding) as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=headers, quoting=csv.QUOTE_NONNUMERIC)
         writer.writeheader()
         for item in lookup_names:

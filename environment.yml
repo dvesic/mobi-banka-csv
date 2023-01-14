@@ -3,4 +3,4 @@ channels:
   - defaults
 dependencies:
   - python=3.10
-prefix: C:\Users\dvesic\Miniconda3\envs\mobi_banka
+prefix: C:\Users\dejan\miniconda3\envs\mobi_banka

@@ -27,7 +27,8 @@ Napravite folder, i raspakujte release u njega. Otvorite CMD u tom folderu i pok
 pip install -r requirements.txt
 ```
 
-To bi bilo to što se tiče instalacije :-)
+To bi bilo to što se tiče instalacije :-) (mada, i bez ovog koraka će raditi - program isključivo koristi samo 
+standardne biblioteke koje dolaze uz python
 
 ## Eksport podataka
 
@@ -77,5 +78,6 @@ options:
  prilagodite kategorije. Za prodavce koji počinju na isti string (tipa ) možete napraviti jedan slog i to će pokriti te 
  prodavce (radi se poređenje tipa *ako string počinje sa ...*).
  
- (u samoj arhivi je već primer dattoteke *Merchants.csv* iz mog eksporta; možete je promeniti ili skroz obrisati, svakako ne smeta)
+ (u samoj arhivi je već primer datoteke *Merchants.csv* iz mog eksporta; možete je promeniti ili skroz obrisati, 
+ svakako ne smeta)
 

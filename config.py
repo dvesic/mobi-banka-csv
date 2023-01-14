@@ -28,6 +28,14 @@ description = cfg['Params'].get('description')
 input_file = cfg['App'].get('input_file')
 out_file = cfg['App'].get('out_file')
 
+# Construct name of sum file
+out_path, out_filename = utils.path_leaf(out_file)
+
+if out_path == '.':
+    out_path = ''
+
+out_file_sum = out_path + 'SUM_' + out_filename
+
 default_cat = cfg['App'].get('default_cat')
 
 lookup_names = cfg['App'].get('lookup_names')
