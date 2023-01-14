@@ -1,0 +1,6 @@
+name: mobi_banka
+channels:
+  - defaults
+dependencies:
+  - python=3.10
+prefix: C:\Users\dvesic\Miniconda3\envs\mobi_banka
