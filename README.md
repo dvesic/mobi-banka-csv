@@ -5,7 +5,7 @@ Jedan od mojih zadataka (u porodici) je da pratim potrošnju i u skladu sa tim [
 Sa druge strane, moja glavna banka je [Mobi banka](https://online.mobibanka.rs), koja na žalost nema podršku za
 kategorizaciju potrošnje.
 
-Šta će programer uraditi? :-) Pa naravno, napraviti program :-)
+Šta će programer uraditi? :-) Pa naravno - napraviti program :-)
 
 Ideja je jednostavna:
 
@@ -46,7 +46,7 @@ Time je ulazni podatak (obično imena *PrintList.csv*) spreman - ili zapamtite s
 
 ## Izvršavanje programa
 
-Ovo je jednostavno; pozicionirate se u folder, i:
+Ovo je jednostavno; otvorite CMD, pozicionirate se u folder, i:
 ```python
 python main.py
 ```
@@ -96,4 +96,6 @@ options:
 
 Naravno, možete uvući *Troskovi.csv* u Excel i da recimo pivot tabelom uradite analizu. Ali, ako želite da
 dobijete samo sumu za svaku kategoriju, možete koristiti *SUM_Troskovi.csv* - tu su apsolutne sume i procenti
-za svaku kategoriju, sortirane opadajuće po sumi.
+za svaku kategoriju, sortirane opadajuće po sumi:
+
+![Mobi-Banka-SUM-fajl](https://user-images.githubusercontent.com/17367063/212502172-b358a5d9-49ac-482f-81da-9b73b8331286.jpg)
