@@ -72,12 +72,28 @@ options:
  ```
  ## Rezultat rada
  
- Program će generisati dve datoteke, *Merchants.csv* i *Troskovi.csv*. 
+ Program će generisati tri datoteke, *Merchants.csv*, *Troskovi.csv* i *SUM_Troskovi.csv*. 
  
  U prvom prolazu će svi prodavci imati podrazumevanu kategoriju (*RAZNO*) - editujte fajl *Merchants.csv* i 
- prilagodite kategorije. Za prodavce koji počinju na isti string (tipa ) možete napraviti jedan slog i to će pokriti te 
+ prilagodite kategorije. Za prodavce koji počinju na isti string možete napraviti jedan slog i to će pokriti te 
  prodavce (radi se poređenje tipa *ako string počinje sa ...*).
- 
+
  (u samoj arhivi je već primer datoteke *Merchants.csv* iz mog eksporta; možete je promeniti ili skroz obrisati, 
  svakako ne smeta)
+ 
+### Struktura *Merchants.csv* fajla
 
+| StartsWith | TranslateTo  | Category | Remove |
+|---|--------------|----------|--------|
+| BENU PHARMACIES | BENU Apoteka | APOTEKA | FALSE  |
+
+* StartsWith - string koji se traži u nazivu prodavca, na početku naziva
+* TranslateTo - string u koji će se zameniti naziv prodavca; generička imena su ponekad ružna
+* Category - kategorija koja će se dodati u rezultujući fajl za sve prodavce koji počinju sa *StartsWith*
+* Remove - ako je TRUE, prodavac će biti uklonjen iz rezultujućeg fajla
+
+### *SUM_Troskovi.csv*
+
+Naravno, možete uvući *Troskovi.csv* u Excel i da recimo pivot tabelom uradite analizu. Ali, ako želite da
+dobijete samo sumu za svaku kategoriju, možete koristiti *SUM_Troskovi.csv* - tu su apsolutne sume i procenti
+za svaku kategoriju, sortirane opadajuće po sumi.
