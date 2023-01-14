@@ -1,5 +1,33 @@
-# mobi-banka-csv
-Processing CSV export from https://online.mobibanka.rs to get better overview of spending
+# Mobi banka - pregled potrošnje po kategorijama na osnovu CSV eksporta
+
+Jedan od mojih zadataka (u porodici) je da pratim potrošnju i u skladu sa tim [planiram budžet](https://www.vesic.org/blog/kucni-budzet-ili-plan-potrosnje-upravljanje-novcem/).
+
+Sa druge strane, moja glavna banka je [Mobi banka](https://online.mobibanka.rs), koja na žalost nema podršku za
+kategorizaciju potrošnje.
+
+Šta će programer uraditi? :-) Pa naravno, napraviti program :-)
+
+Ideja je jednostavna:
+
+1. Uraditi eksport podataka u zadatom periodu u CSV formatu
+2. Provući CSV eksport kroz python skript
+3. On će izgenerisati inicijalnu listu prodavaca sa jednom kategorijom
+4. Modifikovati listu (dodajući kategorije, grupišući prodavce i eventualno isključujući neke) i ići ponovo na (2.)
+5. Kada smo zadovoljni, sačuvati listu prodavaca za sledeće eksporte
+
+Gornji postupak je zahtevan samo prvi put; između dva eksporta, obično je jako mali broj novih prodavaca.
+
+## Instalacija
+
+Potrebno je imati instaliran python 3.6 ili noviji; predlažem najnoviju verziju sa [python.org](https://www.python.org/).
+
+Napravite folder, i raspakujte release u njega. Otvorite CMD u tom folderu i pokrenite (jednom):
+
+```python
+pip install -r requirements.txt
+```
+
+To bi bilo to što se tiče instalacije :-)
 
 ## Eksport podataka
 
@@ -45,7 +73,9 @@ options:
  
  Program će generisati dve datoteke, *Merchants.csv* i *Troskovi.csv*. 
  
- U prvom prolazu će svi prodavci imati podrazumevanu kategoriju (*RAZNO*) - editujte fajl *Merchants.csv* i prilagodite kategorije. Za prodavce koji počinju na isti string (tipa ) možete napraviti jedan slog i to će pokriti te prodavce (radi se poređenje tipa *ako string počinje sa ...*).
+ U prvom prolazu će svi prodavci imati podrazumevanu kategoriju (*RAZNO*) - editujte fajl *Merchants.csv* i 
+ prilagodite kategorije. Za prodavce koji počinju na isti string (tipa ) možete napraviti jedan slog i to će pokriti te 
+ prodavce (radi se poređenje tipa *ako string počinje sa ...*).
  
  (u samoj arhivi je već primer dattoteke *Merchants.csv* iz mog eksporta; možete je promeniti ili skroz obrisati, svakako ne smeta)
 
