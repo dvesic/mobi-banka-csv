@@ -71,10 +71,11 @@ def write_category_sums(transactions):
     text_encoding = return_write_encoding()
 
     with open(config.out_file_sum, 'w', newline='', encoding=text_encoding) as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=['Category','Amount','Percentage'], quoting=csv.QUOTE_NONNUMERIC)
+        writer = csv.DictWriter(csvfile, fieldnames=['Category', 'Amount', 'Percentage'], quoting=csv.QUOTE_NONNUMERIC)
         writer.writeheader()
         for item in rows:
             writer.writerow(item)
+
 
 def write_transactions(transactions, fields):
 
