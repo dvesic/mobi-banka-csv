@@ -15,3 +15,37 @@ Kada se završi generisanje transakcija (da, da, Mobi banka nije šampion brzine
 
 Time je ulazni podatak (obično imena *PrintList.csv*) spreman - ili zapamtite stazu do njega, ili ga prebacite u folder aplikacije.
 
+## Izvršavanje programa
+
+Ovo je jednostavno; pozicionirate se u folder, i:
+```python
+python main.py
+```
+### Opcije programa
+
+Standardne opcije se nalaze u *config.ini* datoteci; ako tu sve podesite, parametri na ulaznoj liniji vam neće ni biti potrebni.
+
+U protivnom:
+
+```
+usage: main.py [-h] [-i INPUT_FILE] [-o OUT_FILE] [-c DEFAULT_CAT]
+
+Obrada transakcija u CSV formatu od Mobi banke, za bolje praćenje troškova
+
+options:
+  -h, --help            show this help message and exit
+  -i INPUT_FILE, --input_file INPUT_FILE
+                        Ime ulaznog CSV fajla (eksport sa banke), default je "PrintList.csv"
+  -o OUT_FILE, --out_file OUT_FILE
+                        Ime rezultujućeg CSV fajla, default je "Troskovi.csv"
+  -c DEFAULT_CAT, --default_cat DEFAULT_CAT
+                        Naziv podrazumevane kategorije, ako se ne nađe; default je "RAZNO"
+ ```
+ ## Rezultat rada
+ 
+ Program će generisati dve datoteke, *Merchants.csv* i *Troskovi.csv*. 
+ 
+ U prvom prolazu će svi prodavci imati podrazumevanu kategoriju (*RAZNO*) - editujte fajl *Merchants.csv* i prilagodite kategorije. Za prodavce koji počinju na isti string (tipa ) možete napraviti jedan slog i to će pokriti te prodavce (radi se poređenje tipa *ako string počinje sa ...*).
+ 
+ (u samoj arhivi je već primer dattoteke *Merchants.csv* iz mog eksporta; možete je promeniti ili skroz obrisati, svakako ne smeta)
+
