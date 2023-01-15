@@ -7,17 +7,6 @@ cfg.optionxform = str
 
 cfg.read('config.ini', encoding='utf-8')
 
-# Logging section
-
-enable_logging = cfg['Logs'].getboolean('enable_logging')
-
-log_info = cfg['Logs'].get('info', '$date$-progress.txt').replace('$date$', utils.get_date_as_string())
-log_error = cfg['Logs'].get('error', '$date$-error_file.txt').replace('$date$', utils.get_date_as_string())
-
-if enable_logging:
-    utils.check_if_dir_exists(log_info)
-    utils.check_if_dir_exists(log_error)
-
 # Params section
 
 production = cfg['Params'].getboolean('production')

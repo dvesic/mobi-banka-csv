@@ -8,15 +8,12 @@ __version__ = '0.26'
 __author__ = 'Dejan Vesić, Dejan@Vesic.Org'
 
 import config
-import file_logging
 import do_csv
 
 
 if __name__ == "__main__":
 
     config.read_cmd_parameters()
-    if not config.production:
-        file_logging.log_info("APP Started")
 
     # Read names
     do_csv.read_names()
