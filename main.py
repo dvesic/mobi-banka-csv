@@ -4,7 +4,7 @@ Set of routines for processing CSV export of transactions from https://online.mo
 Details are in README.md, in Serbian, given target audience.
 """
 
-__version__ = '0.26'
+__version__ = '0.27'
 __author__ = 'Dejan Vesić, Dejan@Vesic.Org'
 
 import config

@@ -100,7 +100,13 @@ def check_names(curr_line):
     if not search_key:
         search_key = curr_line[name_field_alt]
 
+    # Remove intermediary in payments (GooglePay, ApplePay)
+
+    search_key = search_key.removeprefix("GooglePay ")
+    search_key = search_key.removeprefix("ApplePay ")
+
     search_key_clean = search_key.lower().strip()
+
     found = False
     translate_to = None
     category = None
